@@ -1,3 +1,4 @@
+import "dotenv/config";
 let DBConfig;
 
 if (!process.env.DB_CONNECTION_STRING) {
