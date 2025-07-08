@@ -1,20 +1,16 @@
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { getDateOrDefault, getSerialOrDefault } from "../helpers/validatorHelper";
-import eventRepository from "../repositories/eventRepository.js";
+import * as eventService from "../services/event-service.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-    const filters = {
-        pageNumber: getSerialOrDefault(req.query?.page_number, null),
-        name: req.query?.name ?? null,
-        startDate: getDateOrDefault(req.query?.startdate, null)
-    };
-
+    const entity = req.query;
     try {
-        const events = await eventRepository.getPageAsync(filters);
+        const events = await eventService.getPageAsync(entity);
+        res.send(events);
     } catch (internalError) {
+        console.error(internalError);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError);
     }
 });
