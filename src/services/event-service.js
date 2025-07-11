@@ -10,7 +10,29 @@ const getPageAsync = async(entity) => {
         tag: entity?.tag ?? null
     };
     const events = await eventRepository.getPageAsync(pageNumber, constants.PAGE_LIMIT, filters);
-    return events;
+    const formatedEvents = events.map(event => {
+        return {
+            id:                     event.id,
+            name:                   event.name,
+            description:            event.description,
+            start_date:             event.start_date,
+            duration_in_minutes:    event.duration_in_minutes,
+            price:                  event.price,
+            enabled_for_enrollment: event.enabled_for_enrollment,
+            creator_user: {
+                id:         event.id_creator_user,
+                first_name: event.first_name_creator_user,
+                last_name:  event.last_name_creator_user
+            },
+            location: {
+                id:         event.id_location,
+                name:       event.name_location,
+                longitude:  event.longitude_location,
+                latitude:   event.latitude_location
+            }
+        }
+    });
+    return formatedEvents;
 };
 
 export { getPageAsync };
