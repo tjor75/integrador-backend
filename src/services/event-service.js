@@ -16,9 +16,9 @@ const getPageAsync = async(entity) => {
             name:                   event.name,
             description:            event.description,
             start_date:             event.start_date,
-            duration_in_minutes:    event.duration_in_minutes,
-            price:                  event.price,
-            enabled_for_enrollment: event.enabled_for_enrollment,
+            duration_in_minutes:    parseFloat(event.duration_in_minutes),
+            price:                  parseFloat(event.price),
+            enabled_for_enrollment: event.enabled_for_enrollment === "1",
             creator_user: {
                 id:         event.id_creator_user,
                 first_name: event.first_name_creator_user,
@@ -27,8 +27,8 @@ const getPageAsync = async(entity) => {
             location: {
                 id:         event.id_location,
                 name:       event.name_location,
-                longitude:  event.longitude_location,
-                latitude:   event.latitude_location
+                longitude:  parseFloat(event.longitude_location),
+                latitude:   parseFloat(event.latitude_location)
             }
         }
     });

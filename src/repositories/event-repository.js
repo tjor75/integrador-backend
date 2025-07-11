@@ -44,10 +44,6 @@ const getPageAsync = async (pageNumber=1, limit, filters) => {
     ];
 
     const returnArray = await pool.query(SQL, values);
-    returnArray.rows.price = parseFloat(returnArray.rows.price);
-    returnArray.rows.longitude_location = parseFloat(returnArray.rows.longitude_location);
-    returnArray.rows.latitude_location = parseFloat(returnArray.rows.latitude_location);
-
     return returnArray.rows;
 };
 
