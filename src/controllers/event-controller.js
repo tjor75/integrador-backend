@@ -11,12 +11,19 @@ router.get("/", async (req, res) => {
         res.send(events);
     } catch (internalError) {
         console.error(internalError);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
     }
 });
 
 router.get("/:id", async () => {
-    
+    const entity = req.params;
+    try {
+        const events = await eventService.getByIdAsync(entity);
+        res.send(events);
+    } catch (internalError) {
+        console.error(internalError);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
+    }
 });
 
 router.post("/", async () => {
