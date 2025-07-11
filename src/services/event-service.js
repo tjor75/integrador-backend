@@ -1,6 +1,6 @@
 import * as eventRepository from '../repositories/event-repository.js';
 import * as constants from '../configs/constants.js';
-import { getDateOrDefault, getSerialOrDefault } from "../helpers/validatorHelper.js";
+import { getDateOrDefault, getSerialOrDefault } from "../helpers/validator-helper.js";
 
 const getPageAsync = async(entity) => {
     const pageNumber = getSerialOrDefault(entity?.page_number, 1);
