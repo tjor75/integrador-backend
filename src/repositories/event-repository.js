@@ -61,7 +61,7 @@ const getByIdAsync = async (id) => {
         events.name,
         events.description,
         events.start_date,
-        events.duration_in_minutes,
+        CAST(events.duration_in_minutes AS VARCHAR),
         events.price,
         events.enabled_for_enrollment,
         json_build_object(
@@ -119,14 +119,5 @@ const getByIdAsync = async (id) => {
     console.log('DB result:', returnEntity.rows);
     return returnEntity.rowCount > 0 ? returnEntity.rows[0] : null;
 }
-
-const getTagsFromEventAsync = async (eventId) => {
-    const SQL = `SELECT tags.* FROM event_tags
-    INNER JOIN tags ON event_tags.id_tag = tags.id
-    WHERE event_tags.id_event = $1
-    AND (CAST($1 AS VARCHAR) IS NULL OR events.name LIKE '%' || CAST($3 AS VARCHAR) || '%')`;
-
-    const values = [eventId];
-};
 
 export { getAllAsync, getByIdAsync };
