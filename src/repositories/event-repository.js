@@ -129,4 +129,4 @@ const getTagsFromEventAsync = async (eventId) => {
     const values = [eventId];
 };
 
-export { getPageAsync, getByIdAsync };
+export { getAllAsync, getByIdAsync };

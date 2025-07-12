@@ -19,8 +19,10 @@ router.get("/:id", async (req, res) => {
     const id = req.params.id;
     try {
         const event = await eventService.getByIdAsync(id);
-        res.send(event);
-        console.log('Event retrieved:', event);
+        if (event !== null)
+            res.send(event);
+        else
+            res.statusCode(StatusCodes.NOT_FOUND);
     } catch (internalError) {
         console.error(internalError);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
