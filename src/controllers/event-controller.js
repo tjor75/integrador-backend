@@ -15,11 +15,12 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async () => {
-    const entity = req.params;
+router.get("/:id", async (req, res) => {
+    const id = req.params.id;
     try {
-        const events = await eventService.getByIdAsync(entity);
-        res.send(events);
+        const event = await eventService.getByIdAsync(id);
+        res.send(event);
+        console.log('Event retrieved:', event);
     } catch (internalError) {
         console.error(internalError);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
