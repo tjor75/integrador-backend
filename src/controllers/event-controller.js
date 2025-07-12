@@ -7,7 +7,7 @@ const router = Router();
 router.get("/", async (req, res) => {
     const entity = req.query;
     try {
-        const events = await eventService.getPageAsync(entity);
+        const events = await eventService.getAllAsync(entity);
         res.send(events);
     } catch (internalError) {
         console.error(internalError);

@@ -3,7 +3,7 @@ import DBConfig from "../configs/db-config.js";
 
 const pool = new Pool(DBConfig);
 
-const getPageAsync = async (pageNumber=1, limit, filters) => {
+const getAllAsync = async (pageNumber=1, limit, filters) => {
     const SQL = `SELECT
         events.id,
         events.name,

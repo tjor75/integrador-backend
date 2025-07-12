@@ -2,7 +2,7 @@ import * as eventRepository from '../repositories/event-repository.js';
 import * as constants from '../configs/constants.js';
 import { getDateOrDefault, getSerialOrDefault } from "../helpers/validator-helper.js";
 
-const getPageAsync = async(entity) => {
+const getAllAsync = async(entity) => {
     const pageNumber = getSerialOrDefault(entity?.page_number, 1);
     const filters = {
         name: entity?.name ?? null,
@@ -18,4 +18,4 @@ const getByIdAsync = async (id) => {
     return event;
 };
 
-export { getPageAsync, getByIdAsync };
+export { getAllAsync, getByIdAsync };
