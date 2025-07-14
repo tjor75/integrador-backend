@@ -15,6 +15,17 @@ function getDateOrDefault(value, defaultValue) {
         date.setDate(date.getDate() + 1);
     
     return !isNaN(date.getTime()) ? date : defaultValue;
-};
+}
 
-export { getSerialOrDefault, getDateOrDefault };
+function getEmailOrDefault(value, defaultValue) {
+    const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const formatedEmail = value?.trim().toLowerCase();
+    return typeof formatedEmail !== "undefined" && formatedEmail.length <= 125 && EMAIL_PATTERN.test(formatedEmail) ? formatedEmail : defaultValue;
+}
+
+function getRegisterStringOrDefault(value, defaultValue) {
+    const formatedString = value?.trim();
+    return typeof formatedString !== "undefined" && formatedString.length >= 3 ? formatedString : defaultValue;
+}
+
+export { getSerialOrDefault, getDateOrDefault, getEmailOrDefault, getRegisterStringOrDefault };

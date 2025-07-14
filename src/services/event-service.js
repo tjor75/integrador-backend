@@ -9,7 +9,7 @@ const getAllAsync = async(entity) => {
         startDate: getDateOrDefault(entity?.startdate, null),
         tag: entity?.tag ?? null
     };
-    const events = await eventRepository.getPageAsync(pageNumber, constants.PAGE_LIMIT, filters);
+    const events = await eventRepository.getAllAsync(pageNumber, constants.PAGE_LIMIT, filters);
     return events;
 };
 
