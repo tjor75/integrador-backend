@@ -10,16 +10,33 @@ const loginAsync = async (username, password) => {
         returnToken = jwt.sign({
             id:         user.id,
             username:   user.username,
-            firstName:  user.firstName,
-            lastName:   user.lastName
+            firstName:  user.first_name,
+            lastName:   user.last_name
         }, JWTSecretKey, JWTOptions);
 
     return returnToken;
 };
 
 const registerAsync = async (firstName, lastName, username, password) => {
-    const result = await userRepository.registerAsync(firstName, lastName, username, password);
-    return result;
+    const id = await userRepository.createAsync(firstName, lastName, username, password);
+    return id;
 };
 
-export { loginAsync, registerAsync };
+const getCurrentUserAsync = async (req) => {
+    const authHeader = req.headers.authorization;
+    let user = null;
+
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+        const token = authHeader.split(" ")[1];
+        try {
+            user = await jwt.verify(token, JWTSecretKey);
+        } catch (err) {
+            console.error(err);
+            user = null;
+        }
+    }
+
+    return user;
+};
+
+export { loginAsync, registerAsync, getCurrentUserAsync };

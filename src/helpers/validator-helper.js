@@ -3,6 +3,11 @@ function getIntegerOrDefault(value, defaultValue) {
     return Number.isInteger(integer) ? integer : defaultValue;
 }
 
+function getFloatOrDefault(value, defaultValue) {
+    const float = Number(value)
+    return !isNaN(float) ? float : defaultValue;
+}
+
 function getSerialOrDefault(value, defaultValue) {
     const serial = getIntegerOrDefault(value, null);
     return serial !== null && serial > 0 ? serial : defaultValue;
@@ -28,4 +33,4 @@ function getRegisterStringOrDefault(value, defaultValue) {
     return typeof formatedString !== "undefined" && formatedString.length >= 3 ? formatedString : defaultValue;
 }
 
-export { getSerialOrDefault, getDateOrDefault, getEmailOrDefault, getRegisterStringOrDefault };
+export { getIntegerOrDefault, getFloatOrDefault, getSerialOrDefault, getDateOrDefault, getEmailOrDefault, getRegisterStringOrDefault };

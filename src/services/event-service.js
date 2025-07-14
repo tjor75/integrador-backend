@@ -18,4 +18,9 @@ const getByIdAsync = async (id) => {
     return event;
 };
 
-export { getAllAsync, getByIdAsync };
+const createAsync = async (event) => {
+    const event = await eventRepository.createAsync(event);
+    return event;
+};
+
+export { getAllAsync, getByIdAsync, createAsync };

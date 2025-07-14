@@ -10,7 +10,7 @@ const getUserPasswordByUsernameAsync = async (username) => {
     return returnEntity.rowCount > 0 ? returnEntity.rows[0] : null;
 }
 
-const registerAsync = async (firstName, lastName, username, password) => {
+const createAsync = async (firstName, lastName, username, password) => {
     const SQL = `INSERT INTO users (first_name, last_name, username, password)
                  VALUES ($1, $2, $3, $4) RETURNING id`;
     const values = [firstName, lastName, username, password];
@@ -18,4 +18,4 @@ const registerAsync = async (firstName, lastName, username, password) => {
     return result.rowCount > 0 ? result.rows[0].id : null;
 }
 
-export { getUserPasswordByUsernameAsync, registerAsync };
+export { getUserPasswordByUsernameAsync, createAsync };

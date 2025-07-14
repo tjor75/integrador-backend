@@ -120,4 +120,33 @@ const getByIdAsync = async (id) => {
     return returnEntity.rowCount > 0 ? returnEntity.rows[0] : null;
 }
 
-export { getAllAsync, getByIdAsync };
+const createAsync = async (event) => {
+    const SQL = `INSERT INTO events (
+        name,
+        description,
+        id_event_category,
+        id_event_location,
+        start_date,
+        duration_in_minutes,
+        price,
+        max_assistance,
+        id_creator_user
+    )
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING id;`;
+
+    const values = [
+        event.name,
+        event.descripcion,
+        event.idEventCategory,
+        event.idEventLocation,
+        event.startDate,
+        event.durationInMinutes,
+        event.idCreatorUser
+    ];
+
+    const result = await pool.query(SQL, values);
+    return result.rowCount > 0 ? result.rows[0].id : null;
+};
+
+export { getAllAsync, getByIdAsync, createAsync };
