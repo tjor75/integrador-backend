@@ -7,12 +7,7 @@ const loginAsync = async (username, password) => {
     let returnToken = null;
     
     if (user !== null && password === user.password)
-        returnToken = jwt.sign({
-            id:         user.id,
-            username:   user.username,
-            firstName:  user.first_name,
-            lastName:   user.last_name
-        }, JWTSecretKey, JWTOptions);
+        returnToken = jwt.sign({ id: user.id }, JWTSecretKey, JWTOptions);
 
     return returnToken;
 };

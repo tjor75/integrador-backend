@@ -8,8 +8,15 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     const entity = req.query;
+    const pageNumber = getSerialOrDefault(entity?.page_number, 1);
+    const filters = {
+        name: entity?.name || null,
+        startDate: getDateOrDefault(entity?.startdate, null),
+        tag: entity?.tag || null
+    };
+    
     try {
-        const events = await eventService.getAllAsync(entity);
+        const events = await eventService.getAllAsync(pageNumber, filters);
         res.send(events);
     } catch (internalError) {
         console.error(internalError);
