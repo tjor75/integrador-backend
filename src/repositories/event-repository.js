@@ -1,5 +1,6 @@
 import { Pool } from "pg";
 import DBConfig from "../configs/db-config.js";
+import { createUpdateSql } from "../helpers/updater-helper.js";
 
 const pool = new Pool(DBConfig);
 
@@ -85,7 +86,7 @@ const getByIdAsync = async (id) => {
                     'display_order',  provinces.display_order
                 )
             )
-        ),
+        ) AS event_location,
         COALESCE(json_agg(tags) FILTER (WHERE tags.id IS NOT NULL), '[]') AS tags,
         json_build_object(
             'id',         events.id_creator_user,
@@ -116,7 +117,6 @@ const getByIdAsync = async (id) => {
     const values = [id];
 
     const returnEntity = await pool.query(SQL, values);
-    console.log('DB result:', returnEntity.rows);
     return returnEntity.rowCount > 0 ? returnEntity.rows[0] : null;
 }
 
@@ -149,4 +149,21 @@ const createAsync = async (event) => {
     return result.rowCount > 0 ? result.rows[0].id : null;
 };
 
-export { getAllAsync, getByIdAsync, createAsync };
+const updateByIdAsync = async (id, creatorUserId, eventUpdate) => {
+    const eventColumns = Object.keys(eventUpdate);
+    const eventRow = Object.values(eventUpdate);
+
+    const sql = createUpdateSql("events", eventColumns, ["id", "id_creator_user"]);
+    const values = [...eventRow, id, creatorUserId];
+    const result = await pool.query(sql, values);
+    return result.rowCount > 0;
+};
+
+const deleteAsync = async (id, creatorUserId) => {
+    const SQL = `DELETE FROM events WHERE id = $1 AND id_creator_user;`;
+    const values = [id, creatorUserId];
+    const result = await pool.query(SQL, values);
+    return result.rowCount > 0;
+}
+
+export { getAllAsync, getByIdAsync, createAsync, updateByIdAsync };

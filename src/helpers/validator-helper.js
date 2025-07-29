@@ -33,4 +33,5 @@ function getRegisterStringOrDefault(value, defaultValue) {
     return typeof formatedString !== "undefined" && formatedString.length >= 3 ? formatedString : defaultValue;
 }
 
+
 export { getIntegerOrDefault, getFloatOrDefault, getSerialOrDefault, getDateOrDefault, getEmailOrDefault, getRegisterStringOrDefault };

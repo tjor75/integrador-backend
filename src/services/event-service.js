@@ -16,4 +16,14 @@ const createAsync = async (event) => {
     return id;
 };
 
-export { getAllAsync, getByIdAsync, createAsync };
+const updateByIdAsync = async (id, idCreatorUser, eventUpdate) => { 
+    const result = await eventRepository.updateByIdAsync(id, idCreatorUser, eventUpdate);
+    return result;
+};
+
+const deleteAsync = async (id) => {
+    const result = await eventRepository.deleteAsync(id);
+    return result;
+};
+
+export { getAllAsync, getByIdAsync, createAsync, updateByIdAsync, deleteAsync };
