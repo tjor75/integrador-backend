@@ -8,23 +8,19 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     const entity = req.query;
-    const pageNumber = getSerialOrDefault(entity?.page_number, 1);
+    const pageNumber = getSerialOrDefault(entity.page_number, 1);
     const filters = {
-        name: entity?.name || null,
-        startDate: getDateOrDefault(entity?.startdate, null),
-        tag: entity?.tag || null
+        name: entity.name || null,
+        startDate: getDateOrDefault(entity.start_date, null),
+        tag: entity.tag || null
     };
 
-    if (!(filters.name || filters.startDate || filters.tag)) {
-        try {
-            const events = await eventService.getAllAsync(pageNumber, filters);
-            res.send(events);
-        } catch (internalError) {
-            console.error(internalError);
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
-        }
-    } else {
-        res.sendStatus(StatusCodes.BAD_REQUEST);
+    try {
+        const events = await eventService.getAllAsync(pageNumber, filters);
+        res.send(events);
+    } catch (internalError) {
+        console.error(internalError);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
     }
 });
 
