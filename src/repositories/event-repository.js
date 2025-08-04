@@ -139,7 +139,7 @@ const createAsync = async (event) => {
         max_assistance,
         id_creator_user
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING id;`;
 
     const values = [
@@ -149,6 +149,8 @@ const createAsync = async (event) => {
         event.idEventLocation,
         event.startDate,
         event.durationInMinutes,
+        event.price,
+        event.maxAssistance,
         event.idCreatorUser
     ];
 
@@ -236,6 +238,16 @@ const enrollWithCheckAsync = async (eventId, userId) => {
     return success;
 };
 
+const checkEnrollmentAsync = async (eventId, userId) => {
+    const sql = `SELECT id FROM event_enrollments
+                 WHERE id_event = $1 AND id_user = $2 LIMIT 1;`;
+    const values = [eventId, userId];
+    const resultPg = await pool.query(sql, values);
+
+    const success = resultPg.rowCount > 0;
+    return success;
+};
+
 const enrollAsync = async (eventId, userId) => {
     const sql = `INSERT INTO event_enrollments (id_event, id_user)
                  VALUES ($1, $2);`;
@@ -244,7 +256,8 @@ const enrollAsync = async (eventId, userId) => {
 };
 
 const unenrollAsync = async (eventId, userId) => {
-    const sql = `DELETE FROM event_enrollments WHERE id_event = $1 AND id_user = $2;`;
+    const sql = `DELETE FROM event_enrollments
+                 WHERE id_event = $1 AND id_user = $2;`;
     const values = [eventId, userId];
     const resultPg = await pool.query(sql, values);
 
@@ -261,6 +274,7 @@ export {
     getEnrollmentCountAsync,
     doEnrollmentCheckAsync,
     doUnenrollmentCheckAsync,
+    checkEnrollmentAsync,
     enrollAsync,
     unenrollAsync
 };

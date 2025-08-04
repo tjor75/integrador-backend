@@ -7,6 +7,10 @@ function getFloatOrDefault(value, defaultValue) {
     const float = Number(value)
     return !isNaN(float) ? float : defaultValue;
 }
+function getFloatFromOrDefault(value, fromValue, defaultValue) {
+    const float = getFloatFromOrDefault(value, null);
+    return float !== null && float >= fromValue ? value : defaultValue;
+}
 
 function getSerialOrDefault(value, defaultValue) {
     const serial = getIntegerOrDefault(value, null);
@@ -34,4 +38,11 @@ function getRegisterStringOrDefault(value, defaultValue) {
 }
 
 
-export { getIntegerOrDefault, getFloatOrDefault, getSerialOrDefault, getDateOrDefault, getEmailOrDefault, getRegisterStringOrDefault };
+export {
+    getIntegerOrDefault,
+    getFloatOrDefault,
+    getFloatFromOrDefault,
+    getSerialOrDefault,
+    getDateOrDefault,
+    getEmailOrDefault,
+    getRegisterStringOrDefault };

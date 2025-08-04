@@ -35,6 +35,11 @@ const getEnrollmentCountAsync = async (eventId) => {
     return enrollments;
 }; */
 
+const checkEnrollmentAsync = async (eventId, userId) => {
+    const check = await eventRepository.checkEnrollmentAsync(eventId, userId);
+    return check;
+}
+
 const enrollAsync = async (eventId, userId) => {
     const check = await eventRepository.doEnrollmentCheckAsync(eventId, userId);
     let badRequest = null;
@@ -96,6 +101,7 @@ export {
     updateByIdAsync,
     deleteAsync,
     getEnrollmentCountAsync,
+    checkEnrollmentAsync,
     enrollAsync,
     unenrollAsync
 };
