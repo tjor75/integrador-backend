@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
-
+    
     try {
         const event = await eventService.getByIdAsync(id);
         if (event !== null)
@@ -41,24 +41,24 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
     const user = await userService.getCurrentUserAsync(req);
-    let badRequest = "";
+    let badRequest = null;
     
     if (user !== null) {
         const event = {
-            name                : getRegisterStringOrDefault(req.body?.name, null),
-            description         : getRegisterStringOrDefault(req.body?.description, null),
-            idEventCategory     : getSerialOrDefault(req.body?.id_event_category, null),
-            idEventLocation     : getSerialOrDefault(req.body?.id_event_location, null),
-            startDate           : getDateOrDefault(req.body?.start_date, null),
-            durationInMinutes   : getFloatFromOrDefault(req.body?.duration_in_minutes, 0, null),
-            price               : getFloatFromOrDefault(req.body?.price, 0, null),
-            maxAssistance       : getIntegerFromOrDefault(req.body?.max_assistance, 0, null),
-            idCreatorUser       : user.id
+            name                    : getRegisterStringOrDefault(req.body?.name, null),
+            description             : getRegisterStringOrDefault(req.body?.description, null),
+            idEventCategory         : getSerialOrDefault(req.body?.id_event_category, null),
+            idEventLocation         : getSerialOrDefault(req.body?.id_event_location, null),
+            startDate               : getDateOrDefault(req.body?.start_date, null),
+            durationInMinutes       : getIntegerOrDefault(req.body?.duration_in_minutes, null),
+            price                   : getFloatOrDefault(req.body?.price, 0),
+            enabledForEnrollment    : req.body?.enabled_for_enrollment === "1",
+            maxAssistance           : getIntegerOrDefault(req.body?.max_assistance, null),
+            idCreatorUser           : user.id
         };
 
         try {
-            if (event.name === null || event.description === null)
-                badRequest = "name o description están vacíos o tienen menos de tres (3) letras";
+            badRequest = await eventService.checkCreateAsync(event);
 
             if (!badRequest) {
                 const id = await eventService.createAsync(event);
@@ -73,19 +73,17 @@ router.post("/", async (req, res) => {
             console.error(internalError);
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
         }
-        res.sendStatus(200);
     } else {
         res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
 });
 
-router.put("/", async () => {
+router.put("/", async (req, res) => {
     const user = await userService.getCurrentUserAsync(req);
 
     if (user !== null) {
         const id = getSerialOrDefault(req.body?.id, null);
         const creatorUserId = user.id;
-        //const numberOfFields = ;
         const eventUpdate = {
             name                : getRegisterStringOrDefault(req.body?.name, null),
             description         : getRegisterStringOrDefault(req.body?.description, null),
@@ -96,6 +94,7 @@ router.put("/", async () => {
             price               : getFloatOrDefault(req.body?.price, null),
             max_assistance      : getIntegerOrDefault(req.body?.max_assistance, null)
         };
+
         //const numberOfValidFields = Object.values(eventUpdate).filter(value => value !== null).length;
         
 

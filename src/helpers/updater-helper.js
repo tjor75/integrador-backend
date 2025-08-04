@@ -25,6 +25,6 @@ export function createUpdateSql(table, replacementColumns, neededConditions) {
     }
 
     updateSql += ";";
-    
+
     return updateSql;
 }

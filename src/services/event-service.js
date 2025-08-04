@@ -1,5 +1,6 @@
-import * as eventRepository from '../repositories/event-repository.js';
-import * as constants from '../configs/constants.js';
+import * as eventRepository from "../repositories/event-repository.js";
+import * as eventLocationService from "../repositories/event-location-repository.js";
+import * as constants from "../configs/constants.js";
 
 const getAllAsync = async (pageNumber, filters) => {
     const events = await eventRepository.getAllAsync(pageNumber, constants.PAGE_LIMIT, filters);
@@ -10,6 +11,26 @@ const getByIdAsync = async (id) => {
     const event = await eventRepository.getByIdAsync(id);
     return event;
 };
+
+const checkCreateAsync = async (event) => {
+    let badRequest = null;
+    
+    if (event.name === null || event.description === null) {
+        badRequest = "El nombre y descripción debe tener al menos tres (3) letras.";
+    } else if (event.duration_in_minutes !== null && event.duration_in_minutes < 0) {
+        badRequest = "La duración del evento debe ser mayor a 0.";
+    } else if (event.price < 0) {
+        badRequest = "El precio no puede ser negativo.";
+    } else {
+        const maxCapacity = await eventLocationService.getMaxCapacityById(event.idEventLocation);
+        if (maxCapacity === null)
+            badRequest = "No existe la locación del evento.";
+        else if (event.maxAssistance === null || event.maxAssistance < 1 || event.maxAssistance > maxCapacity)
+            badRequest = "La asistencia debe estar entre 1 y la capacidad máxima del lugar incluido.";
+    }
+
+    return badRequest;
+}
 
 const createAsync = async (event) => {
     const id = await eventRepository.createAsync(event);
@@ -92,11 +113,12 @@ const unenrollAsync = async (eventId, userId) => {
         await eventRepository.unenrollAsync(eventId, userId);
 
     return badRequest;
-};
+}
 
 export {
     getAllAsync,
     getByIdAsync,
+    checkCreateAsync,
     createAsync,
     updateByIdAsync,
     deleteAsync,

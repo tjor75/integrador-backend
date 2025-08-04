@@ -136,20 +136,22 @@ const createAsync = async (event) => {
         start_date,
         duration_in_minutes,
         price,
+        enabled_for_enrollment,
         max_assistance,
         id_creator_user
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     RETURNING id;`;
 
     const values = [
         event.name,
-        event.descripcion,
+        event.description,
         event.idEventCategory,
         event.idEventLocation,
         event.startDate,
         event.durationInMinutes,
         event.price,
+        event.enabledForEnrollment ? "1" : "0",
         event.maxAssistance,
         event.idCreatorUser
     ];
@@ -224,18 +226,6 @@ const doUnenrollmentCheckAsync = async (eventId, userId) => {
     
     const result = resultPg.rowCount > 0 ? resultPg.rows[0] : null;
     return result;
-};
-
-const enrollWithCheckAsync = async (eventId, userId) => {
-    const sql = `INSERT INTO event_enrollments (id_event, id_user)
-                 VALUES ($1, $2)
-                 ON CONFLICT (id_event, id_user) DO NOTHING
-                 RETURNING id;`;
-    const values = [eventId, userId];
-    const resultPg = await pool.query(sql, values);
-
-    const success = resultPg.rowCount > 0;
-    return success;
 };
 
 const checkEnrollmentAsync = async (eventId, userId) => {
