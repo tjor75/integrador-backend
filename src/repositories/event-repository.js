@@ -5,7 +5,7 @@ import { createUpdateSql } from "../helpers/updater-helper.js";
 const pool = new Pool(DBConfig);
 
 const getAllAsync = async (pageNumber=1, limit, filters) => {
-    const SQL = `SELECT
+    const sql = `SELECT
         events.id,
         events.name,
         events.description,
@@ -52,12 +52,17 @@ const getAllAsync = async (pageNumber=1, limit, filters) => {
         filters.tag
     ];
 
-    const returnArray = await pool.query(SQL, values);
+    const returnArray = await pool.query(sql, values);
     return returnArray.rows;
 };
 
+/*
+* Retrieves an event by its ID.
+* @param {number} id - The ID of the event to retrieve.
+* @returns {Promise<Object|null>} The event object if found, otherwise null.
+*/
 const getByIdAsync = async (id) => {
-    const SQL = `SELECT
+    const sql = `SELECT
         events.id,
         events.name,
         events.description,
@@ -89,9 +94,10 @@ const getByIdAsync = async (id) => {
         ) AS event_location,
         COALESCE(json_agg(tags) FILTER (WHERE tags.id IS NOT NULL), '[]') AS tags,
         json_build_object(
-            'id',         events.id_creator_user,
-            'first_name', users.first_name,
-            'last_name',  users.last_name
+            'id',           events.id_creator_user,
+            'first_name',   users.first_name,
+            'last_name',    users.last_name,
+            'username',     users.username
         ) AS creator_user
     FROM events
     INNER JOIN users ON events.id_creator_user = users.id
@@ -110,18 +116,19 @@ const getByIdAsync = async (id) => {
         event_locations.latitude, locations.id, locations.name,
         locations.longitude, locations.latitude, provinces.id,
         provinces.name, provinces.full_name, provinces.latitude,
-        provinces.longitude, provinces.display_order, users.first_name,
-        users.last_name
+        provinces.longitude, provinces.display_order, users.username,
+        users.first_name, users.last_name
     LIMIT 1`;
 
     const values = [id];
 
-    const returnEntity = await pool.query(SQL, values);
-    return returnEntity.rowCount > 0 ? returnEntity.rows[0] : null;
+    const response = await pool.query(sql, values);
+    const entity = response.rowCount > 0 ? response.rows[0] : null;
+    return entity;
 }
 
 const createAsync = async (event) => {
-    const SQL = `INSERT INTO events (
+    const sql = `INSERT INTO events (
         name,
         description,
         id_event_category,
@@ -145,8 +152,9 @@ const createAsync = async (event) => {
         event.idCreatorUser
     ];
 
-    const result = await pool.query(SQL, values);
-    return result.rowCount > 0 ? result.rows[0].id : null;
+    const resultPg = await pool.query(sql, values);
+    const id = resultPg.rowCount > 0 ? resultPg.rows[0].id : null;
+    return id;
 };
 
 const updateByIdAsync = async (id, creatorUserId, eventUpdate) => {
@@ -155,15 +163,104 @@ const updateByIdAsync = async (id, creatorUserId, eventUpdate) => {
 
     const sql = createUpdateSql("events", eventColumns, ["id", "id_creator_user"]);
     const values = [...eventRow, id, creatorUserId];
-    const result = await pool.query(sql, values);
-    return result.rowCount > 0;
+    const resultPg = await pool.query(sql, values);
+
+    return resultPg.rowCount;
 };
 
 const deleteAsync = async (id, creatorUserId) => {
-    const SQL = `DELETE FROM events WHERE id = $1 AND id_creator_user;`;
+    const sql = `DELETE FROM events WHERE id = $1 AND id_creator_user = $2;`;
     const values = [id, creatorUserId];
-    const result = await pool.query(SQL, values);
-    return result.rowCount > 0;
+    const resultPg = await pool.query(sql, values);
+    return resultPg.rowCount;
+};
+
+const getEnrollmentCountAsync = async (eventId) => {
+    const sql = `SELECT COUNT(*) AS enrollment_count FROM event_enrollments WHERE id_event = $1;`;
+    const values = [eventId];
+    const resultPg = await pool.query(sql, values);
+    const count = parseInt(resultPg.rows[0].enrollment_count, 10);
+    return count;
 }
 
-export { getAllAsync, getByIdAsync, createAsync, updateByIdAsync };
+const doEnrollmentCheckAsync = async (eventId, userId) => {
+    const sql = `
+        SELECT
+            e.id AS event_id,
+            e.max_assistance,
+            e.start_date,
+            e.enabled_for_enrollment,
+            (
+                SELECT COUNT(*) FROM event_enrollments ee WHERE ee.id_event = e.id
+            ) AS current_enrollments,
+            (
+                SELECT id FROM event_enrollments ee2 WHERE ee2.id_event = e.id AND ee2.id_user = $2
+            ) AS user_already_enrolled
+        FROM events e
+        WHERE e.id = $1
+        LIMIT 1;
+    `;
+    const values = [eventId, userId];
+    const resultPg = await pool.query(sql, values);
+    const result = resultPg.rowCount > 0 ? resultPg.rows[0] : null;
+    return result;
+};
+
+const doUnenrollmentCheckAsync = async (eventId, userId) => {
+    const sql = `
+        SELECT
+            e.id AS event_id,
+            e.start_date,
+            (
+                SELECT id FROM event_enrollments ee WHERE ee.id_event = e.id AND ee.id_user = $2
+            ) AS user_already_enrolled
+        FROM events e
+        WHERE e.id = $1
+        LIMIT 1;`;
+    const values = [eventId, userId];
+    const resultPg = await pool.query(sql, values);
+    
+    const result = resultPg.rowCount > 0 ? resultPg.rows[0] : null;
+    return result;
+};
+
+const enrollWithCheckAsync = async (eventId, userId) => {
+    const sql = `INSERT INTO event_enrollments (id_event, id_user)
+                 VALUES ($1, $2)
+                 ON CONFLICT (id_event, id_user) DO NOTHING
+                 RETURNING id;`;
+    const values = [eventId, userId];
+    const resultPg = await pool.query(sql, values);
+
+    const success = resultPg.rowCount > 0;
+    return success;
+};
+
+const enrollAsync = async (eventId, userId) => {
+    const sql = `INSERT INTO event_enrollments (id_event, id_user)
+                 VALUES ($1, $2);`;
+    const values = [eventId, userId];
+    await pool.query(sql, values);
+};
+
+const unenrollAsync = async (eventId, userId) => {
+    const sql = `DELETE FROM event_enrollments WHERE id_event = $1 AND id_user = $2;`;
+    const values = [eventId, userId];
+    const resultPg = await pool.query(sql, values);
+
+    const success = resultPg.rowCount > 0;
+    return success;
+};
+
+export {
+    getAllAsync,
+    getByIdAsync,
+    createAsync,
+    updateByIdAsync,
+    deleteAsync,
+    getEnrollmentCountAsync,
+    doEnrollmentCheckAsync,
+    doUnenrollmentCheckAsync,
+    enrollAsync,
+    unenrollAsync
+};

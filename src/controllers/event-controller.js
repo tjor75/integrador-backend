@@ -26,6 +26,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const id = req.params.id;
+
     try {
         const event = await eventService.getByIdAsync(id);
         if (event !== null)
@@ -112,17 +113,97 @@ router.put("/", async () => {
 });
 
 router.delete("/:id", async () => {
-    const id = req.params.id;
-    try {
-        const event = await eventService.getByIdAsync(id);
-        if (event !== null)
-            res.send(event);
-        else
-            res.statusCode(StatusCodes.NOT_FOUND);
-    } catch (internalError) {
-        console.error(internalError);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
+    const user = await userService.getCurrentUserAsync(req);
+    let badRequest = null;
+
+    if (user !== null) {
+        const id = getSerialOrDefault(req.params.id, null);
+
+        if (id !== null)
+            badRequest = "El id del evento no es válido.";
+        else if (await eventService.getEnrollmentCountAsync(id) > 0)
+            badRequest = "No se puede eliminar un evento con inscripciones.";
+
+        if (badRequest !== null) {
+            try {
+                const rowsAffected = await eventService.deleteAsync(id, creatorUserId);
+                if (rowsAffected !== 0)
+                    res.sendStatus(StatusCodes.OK);
+                else
+                    res.sendStatus(StatusCodes.NOT_FOUND);
+            } catch (internalError) {
+                console.error(internalError);
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
+            }
+        } else {
+            res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
+    } else {
+        res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
+});
+
+router.post("/:id/enrollment", async (req, res) => {
+    const user = await userService.getCurrentUserAsync(req);
+    let badRequest = null;
+
+    if (user !== null) {
+        const id = getIntegerOrDefault(req.params.id, null);
+
+        if (id !== null) {
+            try {
+                badRequest = await eventService.enrollAsync(id, user.id);
+                if (badRequest === null)
+                    res.sendStatus(StatusCodes.CREATED);
+                else
+                    res.send(StatusCodes.BAD_REQUEST).send(badRequest);
+            } catch (internalError) {
+                console.error(internalError);
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
+            }
+        }
+        else {
+            res.sendStatus(StatusCodes.BAD_REQUEST).send("ID del evento no válido.");
+        }
+    } else {
+        res.sendStatus(StatusCodes.UNAUTHORIZED);
+    }
+});
+
+router.delete("/:id/enrollment", async (req, res) => {
+    const id = req.params.id;
+    const user = await userService.getCurrentUserAsync(req);
+
+    if (user !== null) {
+        const userId = user.id;
+        try {
+            const result = await eventService.unenrollAsync(id, userId);
+            if (result)
+                res.sendStatus(StatusCodes.NO_CONTENT);
+            else
+                res.sendStatus(StatusCodes.BAD_REQUEST);
+        } catch (internalError) {
+            console.error(internalError);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
+        }
+    } else {
+        res.sendStatus(StatusCodes.UNAUTHORIZED);
+    }
+
+    /*
+    Remueve al usuario (autenticado) del evento enviado por parámetro.
+
+Retorna un status code 200 (ok), sí se pudo remover de la suscripción.
+
+Retorna un status code 400 (bad request) y un mensaje de error en los siguientes casos:
+
+    El usuario no se encuentra registrado al evento.
+    Intenta removerse de un evento que ya sucedió (start_date), o la fecha del evento es hoy.
+
+Retorna un status code 401 (Unauthorized) y un mensaje de error en caso de que el usuario no se encuentre autenticado.
+
+Retorna un status code 404 (not found) en caso de que el id sea inexistente.
+    */
 });
 
 export default router;
