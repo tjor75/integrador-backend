@@ -153,7 +153,7 @@ const createAsync = async (event) => {
         event.price,
         event.enabledForEnrollment ? "1" : "0",
         event.maxAssistance,
-        event.idCreatorUser
+        event.creatorUserId
     ];
 
     const resultPg = await pool.query(sql, values);
@@ -162,11 +162,11 @@ const createAsync = async (event) => {
 };
 
 const updateByIdAsync = async (id, creatorUserId, eventUpdate) => {
-    const eventColumns = Object.keys(eventUpdate);
-    const eventRow = Object.values(eventUpdate);
+    const columns = Object.keys(eventUpdate);
+    const row = Object.values(eventUpdate);
 
-    const sql = createUpdateSql("events", eventColumns, ["id", "id_creator_user"]);
-    const values = [...eventRow, id, creatorUserId];
+    const sql = createUpdateSql("events", columns, ["id", "id_creator_user"]);
+    const values = [...row, id, creatorUserId];
     const resultPg = await pool.query(sql, values);
 
     return resultPg.rowCount;

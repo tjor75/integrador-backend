@@ -2,7 +2,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as eventService from "../services/event-service.js";
 import * as userService from "../services/user-service.js";
-import { getDateOrDefault, getFloatOrDefault, getIntegerOrDefault, getRegisterStringOrDefault, getSerialOrDefault } from "../helpers/validator-helper.js";
+import { getDateOrDefault, getFloatOrDefault, getIntegerOrDefault, getRegisterStringOrDefault, getSerialOrDefault } from "../helpers/type-helper.js";
 
 const router = Router();
 
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
             price                   : getFloatOrDefault(req.body?.price, 0),
             enabledForEnrollment    : req.body?.enabled_for_enrollment === "1",
             maxAssistance           : getIntegerOrDefault(req.body?.max_assistance, null),
-            idCreatorUser           : user.id
+            creatorUserId           : user.id
         };
 
         try {
@@ -182,7 +182,7 @@ router.put("/", async (req, res) => {
     }
 });
 
-router.delete("/:id", async () => {
+router.delete("/:id", async (req, res) => {
     const user = await userService.getCurrentUserAsync(req);
     let badRequest = null;
 
@@ -191,17 +191,16 @@ router.delete("/:id", async () => {
 
         try {
             if (id !== null)
-                badRequest = "El id del evento no es válido.";
+                badRequest = "El ID del evento no es válido.";
             else if (await eventService.getEnrollmentCountAsync(id) > 0)
                 badRequest = "No se puede eliminar un evento con inscripciones.";
 
             if (badRequest !== null) {
-                const rowsAffected = await eventService.deleteAsync(id, creatorUserId);
+                const rowsAffected = await eventService.deleteAsync(id, user.id);
                 if (rowsAffected !== 0)
                     res.sendStatus(StatusCodes.OK);
                 else
                     res.sendStatus(StatusCodes.NOT_FOUND);
-                
             } else {
                 res.sendStatus(StatusCodes.BAD_REQUEST);
             }

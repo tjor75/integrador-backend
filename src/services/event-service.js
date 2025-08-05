@@ -12,6 +12,7 @@ const getByIdAsync = async (id) => {
     return event;
 };
 
+
 const checkCreateAsync = async (event) => {
     let badRequest = null;
     
@@ -30,15 +31,14 @@ const checkCreateAsync = async (event) => {
     }
 
     return badRequest;
-}
-
+};
 const createAsync = async (event) => {
     const id = await eventRepository.createAsync(event);
     return id;
 };
 
-const updateByIdAsync = async (id, idCreatorUser, eventUpdate) => { 
-    const result = await eventRepository.updateByIdAsync(id, idCreatorUser, eventUpdate);
+const updateByIdAsync = async (id, creatorUserId, eventUpdate) => { 
+    const result = await eventRepository.updateByIdAsync(id, creatorUserId, eventUpdate);
     return result;
 };
 
@@ -51,10 +51,6 @@ const getEnrollmentCountAsync = async (eventId) => {
     const count = await eventRepository.getEnrollmentCountAsync(eventId);
     return count;
 }
-/* const getEnrollmentsAsync = async (eventId) => {
-    const enrollments = await eventRepository.getEnrollmentsAsync(eventId);
-    return enrollments;
-}; */
 
 const checkEnrollmentAsync = async (eventId, userId) => {
     const check = await eventRepository.checkEnrollmentAsync(eventId, userId);
