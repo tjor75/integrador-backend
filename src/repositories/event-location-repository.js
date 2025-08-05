@@ -40,14 +40,14 @@ export const createAsync = async (eventLocation) => {
     return resultPg.rows[0].id;
 };
 
-export const updateByIdAsync = async (id, creatorUserId, eventLocationUpdate) => {
+export const updateAsync = async (id, creatorUserId, eventLocationUpdate) => {
     const columns = Object.keys(eventLocationUpdate);
     const row = Object.values(eventLocationUpdate);
-    
+        
     const sql = createUpdateSql("event_locations", columns, ["id", "id_creator_user"]);
     const values = [...row, id, creatorUserId];
     const resultPg = await pool.query(sql, values);
-    
+        
     return resultPg.rowCount;
 };
 

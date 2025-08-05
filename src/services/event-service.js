@@ -1,19 +1,18 @@
 import * as eventRepository from "../repositories/event-repository.js";
-import * as eventLocationService from "../repositories/event-location-repository.js";
+import * as eventLocationService from "../repositories/event-location-service.js";
 import * as constants from "../configs/constants.js";
 
-const getAllAsync = async (pageNumber, filters) => {
+export const getAllAsync = async (pageNumber, filters) => {
     const events = await eventRepository.getAllAsync(pageNumber, constants.PAGE_LIMIT, filters);
     return events;
 };
 
-const getByIdAsync = async (id) => {
+export const getByIdAsync = async (id) => {
     const event = await eventRepository.getByIdAsync(id);
     return event;
 };
 
-
-const checkCreateAsync = async (event) => {
+export const checkCreateAsync = async (event) => {
     let badRequest = null;
     
     if (event.name === null || event.description === null) {
@@ -32,32 +31,32 @@ const checkCreateAsync = async (event) => {
 
     return badRequest;
 };
-const createAsync = async (event) => {
+export const createAsync = async (event) => {
     const id = await eventRepository.createAsync(event);
     return id;
 };
 
-const updateByIdAsync = async (id, creatorUserId, eventUpdate) => { 
-    const result = await eventRepository.updateByIdAsync(id, creatorUserId, eventUpdate);
+export const updateAsync = async (id, creatorUserId, eventUpdate) => { 
+    const result = await eventRepository.updateAsync(id, creatorUserId, eventUpdate);
     return result;
 };
 
-const deleteAsync = async (id, creatorUserId) => {
+export const deleteAsync = async (id, creatorUserId) => {
     const result = await eventRepository.deleteAsync(id, creatorUserId);
     return result;
 };
 
-const getEnrollmentCountAsync = async (eventId) => {
+export const getEnrollmentCountAsync = async (eventId) => {
     const count = await eventRepository.getEnrollmentCountAsync(eventId);
     return count;
 }
 
-const checkEnrollmentAsync = async (eventId, userId) => {
+export const checkEnrollmentAsync = async (eventId, userId) => {
     const check = await eventRepository.checkEnrollmentAsync(eventId, userId);
     return check;
 }
 
-const enrollAsync = async (eventId, userId) => {
+export const enrollAsync = async (eventId, userId) => {
     const check = await eventRepository.doEnrollmentCheckAsync(eventId, userId);
     let badRequest = null;
 
@@ -77,23 +76,7 @@ const enrollAsync = async (eventId, userId) => {
     return badRequest;
 };
 
-    /*
-    
-    Remueve al usuario (autenticado) del evento enviado por parámetro.
-
-Retorna un status code 200 (ok), sí se pudo remover de la suscripción.
-
-Retorna un status code 400 (bad request) y un mensaje de error en los siguientes casos:
-
-    El usuario no se encuentra registrado al evento.
-    Intenta removerse de un evento que ya sucedió (start_date), o la fecha del evento es hoy.
-
-Retorna un status code 401 (Unauthorized) y un mensaje de error en caso de que el usuario no se encuentre autenticado.
-
-Retorna un status code 404 (not found) en caso de que el id sea inexistente.
-*/
-
-const unenrollAsync = async (eventId, userId) => {
+export const unenrollAsync = async (eventId, userId) => {
     const check = await eventRepository.doUnenrollmentCheckAsync(eventId, userId);
     let badRequest = null;
 
@@ -110,16 +93,3 @@ const unenrollAsync = async (eventId, userId) => {
 
     return badRequest;
 }
-
-export {
-    getAllAsync,
-    getByIdAsync,
-    checkCreateAsync,
-    createAsync,
-    updateByIdAsync,
-    deleteAsync,
-    getEnrollmentCountAsync,
-    checkEnrollmentAsync,
-    enrollAsync,
-    unenrollAsync
-};

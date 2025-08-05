@@ -1,3 +1,1 @@
-const PAGE_LIMIT = 6;
-
-export { PAGE_LIMIT };
+export const PAGE_LIMIT = 6;

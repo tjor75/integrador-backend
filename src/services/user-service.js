@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import * as userRepository from '../repositories/user-repository.js';
 import { JWTSecretKey, JWTOptions } from '../configs/jwt-config.js';
 
-const loginAsync = async (username, password) => {
+export const loginAsync = async (username, password) => {
     const user = await userRepository.getUserPasswordByUsernameAsync(username);
     let returnToken = null;
     
@@ -12,12 +12,12 @@ const loginAsync = async (username, password) => {
     return returnToken;
 };
 
-const registerAsync = async (firstName, lastName, username, password) => {
+export const registerAsync = async (firstName, lastName, username, password) => {
     const id = await userRepository.createAsync(firstName, lastName, username, password);
     return id;
 };
 
-const getCurrentUserAsync = async (req) => {
+export const getCurrentUserAsync = async (req) => {
     const authHeader = req.headers.authorization;
     let user = null;
 
@@ -33,5 +33,3 @@ const getCurrentUserAsync = async (req) => {
 
     return user;
 };
-
-export { loginAsync, registerAsync, getCurrentUserAsync };

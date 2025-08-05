@@ -86,7 +86,7 @@ router.put("/", async (req, res) => {
     if (user !== null) {
         const id = getSerialOrDefault(req.body?.id, null);
         const creatorUserId = user.id;
-        const eventUpdate = {};
+        const eventupdateAsync = {};
 
         try {
             if (id === null)
@@ -165,7 +165,7 @@ router.put("/", async (req, res) => {
             }
             
             if (badRequest === null) {
-                const rowsAffected = await eventService.updateByIdAsync(id, creatorUserId, eventUpdate);
+                const rowsAffected = await eventService.updateAsync(id, creatorUserId, eventUpdate);
                 if (rowsAffected !== 0)
                     res.sendStatus(StatusCodes.CREATED);
                 else
