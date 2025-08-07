@@ -1,4 +1,4 @@
-import * as eventLocationRepository from "../event-location-repository.js";
+import * as eventLocationRepository from "../repositories/event-location-repository.js";
 
 export const getMaxCapacityById = async (id) => {
     const maxCapacity = await eventLocationRepository.getMaxCapacityById(id);

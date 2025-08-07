@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as userService from "../services/user-service.js";
-import { getEmailOrDefault, getRegisterStringOrDefault } from "../helpers/type-helper.js";
+import { getEmailOrDefault, getRegisterStringOrDefault } from "../helpers/validator-helper.js";
 
 const router = Router();
 

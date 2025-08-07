@@ -118,7 +118,7 @@ export const getByIdAsync = async (id) => {
     const values = [id];
 
     const response = await pool.query(sql, values);
-    const entity = response.rowCount > 0 ? response.rows[0] : null;
+    const entity = response.rows.length > 0 ? response.rows[0] : null;
     return entity;
 };
 
@@ -141,14 +141,14 @@ export const createAsync = async (entity) => {
     const values = [
         entity.name,
         entity.description,
-        entity.idEventCategory,
-        entity.idEventLocation,
-        entity.startDate,
-        entity.durationInMinutes,
-        entity.price,
-        entity.enabledForEnrollment ? "1" : "0",
-        entity.maxAssistance,
-        entity.creatorUserId
+        entity.id_event_category,
+        entity.id_event_location,
+        entity.start_date,
+        entity.duration_in_minutes,
+        entity.price ?? 0,
+        entity.enabled_for_enrollment === "1" ? "1" : "0",
+        entity.max_assistance,
+        entity.id_creator_user
     ];
 
     const resultPg = await pool.query(sql, values);
