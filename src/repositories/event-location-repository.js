@@ -57,3 +57,26 @@ export const deleteAsync = async (id) => {
     const resultPg = await pool.query(sql, values);
     return resultPg.rowCount > 0;
 };
+
+export const existsLocationByIdAsync = async (id) => {
+    const sql = `SELECT 1 FROM locations WHERE id = $1 LIMIT 1;`;
+    const values = [id];
+    const resultPg = await pool.query(sql, values);
+    return resultPg.rowCount > 0;
+};
+
+export const listBaseLocationsWithProvinceAsync = async () => {
+    const sql = `
+        SELECT l.id,
+               l.name AS location_name,
+               l.id_province,
+               l.latitude,
+               l.longitude,
+               p.full_name AS province_name
+        FROM locations l
+        JOIN provinces p ON p.id = l.id_province
+        ORDER BY p.display_order, l.name;
+    `;
+    const resultPg = await pool.query(sql);
+    return resultPg.rows;
+};

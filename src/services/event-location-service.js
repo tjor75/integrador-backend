@@ -29,3 +29,11 @@ export const deleteAsync = async (id) => {
     const result = await eventLocationRepository.deleteAsync(id);
     return result;
 };
+
+export const locationExistsAsync = async (id) => {
+    return await eventLocationRepository.existsLocationByIdAsync(id);
+};
+
+export const listBaseLocationsWithProvinceAsync = async () => {
+    return await eventLocationRepository.listBaseLocationsWithProvinceAsync();
+};

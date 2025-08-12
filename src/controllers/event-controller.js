@@ -33,7 +33,7 @@ router.get("/:id", async (req, res) => {
         if (event !== null)
             res.send(event);
         else
-            res.statusCode(StatusCodes.NOT_FOUND);
+            res.sendStatus(StatusCodes.NOT_FOUND);
     } catch (internalError) {
         console.error(internalError);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
@@ -122,12 +122,12 @@ router.delete("/:id", async (req, res) => {
         const id = getSerialOrDefault(req.params.id, null);
 
         try {
-            if (id !== null)
+            if (id === null)
                 badRequest = "El ID del evento no es válido.";
             else if (await eventService.getEnrollmentCountAsync(id) > 0)
                 badRequest = "No se puede eliminar un evento con inscripciones.";
 
-            if (badRequest !== null) {
+            if (badRequest === null) {
                 const rowsAffected = await eventService.deleteAsync(id, user.id);
                 if (rowsAffected !== 0) res.sendStatus(StatusCodes.OK);
                 else                    res.sendStatus(StatusCodes.NOT_FOUND);

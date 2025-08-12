@@ -2,6 +2,7 @@ import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as userService from "../services/user-service.js";
 import * as eventLocationService from "../services/event-location-service.js";
+import { getSerialOrDefault } from "../helpers/validator-helper.js";
 
 const router = Router();
 
@@ -18,6 +19,17 @@ router.get("/", async (req, res) => {
         }
     } else {
         res.sendStatus(StatusCodes.UNAUTHORIZED);
+    }
+});
+
+// Listado de localidades base con sus provincias (para selector)
+router.get("/base-locations", async (req, res) => {
+    try {
+        const list = await eventLocationService.listBaseLocationsWithProvinceAsync();
+        res.status(StatusCodes.OK).json(list);
+    } catch (internalError) {
+        console.error(internalError);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
     }
 });
 
