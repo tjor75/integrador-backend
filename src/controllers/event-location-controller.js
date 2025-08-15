@@ -23,9 +23,9 @@ router.get("/", async (req, res) => {
 });
 
 // Listado de localidades base con sus provincias (para selector)
-router.get("/base-locations", async (req, res) => {
+router.get("/locations", async (req, res) => {
     try {
-        const list = await eventLocationService.listBaseLocationsWithProvinceAsync();
+        const list = await eventLocationService.listLocationsWithProvinceAsync();
         res.status(StatusCodes.OK).json(list);
     } catch (internalError) {
         console.error(internalError);

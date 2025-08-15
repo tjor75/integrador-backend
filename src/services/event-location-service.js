@@ -34,6 +34,6 @@ export const locationExistsAsync = async (id) => {
     return await eventLocationRepository.existsLocationByIdAsync(id);
 };
 
-export const listBaseLocationsWithProvinceAsync = async () => {
-    return await eventLocationRepository.listBaseLocationsWithProvinceAsync();
+export const listLocationsWithProvinceAsync = async () => {
+    return await eventLocationRepository.listLocationsWithProvinceAsync();
 };

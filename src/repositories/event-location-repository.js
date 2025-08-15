@@ -65,7 +65,7 @@ export const existsLocationByIdAsync = async (id) => {
     return resultPg.rowCount > 0;
 };
 
-export const listBaseLocationsWithProvinceAsync = async () => {
+export const listLocationsWithProvinceAsync = async () => {
     const sql = `
         SELECT l.id,
                l.name AS location_name,
