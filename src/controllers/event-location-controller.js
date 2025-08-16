@@ -7,7 +7,7 @@ import { getSerialOrDefault } from "../helpers/validator-helper.js";
 const router = Router();
 
 router.get("/", async (req, res) => {
-    const user = userService.getCurrentUserAsync(req);
+    const user = await userService.getCurrentUserAsync(req);
 
     if (user) {
         try {
