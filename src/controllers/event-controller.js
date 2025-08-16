@@ -26,8 +26,13 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const id = req.params.id;
+    const id = getSerialOrDefault(req.params.id, null);
     
+    if (id === null) {
+        res.sendStatus(StatusCodes.NOT_FOUND)
+        return;
+    }
+
     try {
         const event = await eventService.getByIdAsync(id);
         if (event !== null)
@@ -147,7 +152,7 @@ router.get("/:id/enrollment", async (req, res) => {
     const user = await userService.getCurrentUserAsync(req);
 
     if (user !== null) {
-        const id = getIntegerOrDefault(req.params.id, null);
+        const id = getSerialOrDefault(req.params.id, null);
 
         if (id !== null) {
             try {

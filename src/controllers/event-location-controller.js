@@ -102,5 +102,31 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.delete("/:id", async (req, res) => {
+    const user = await userService.getCurrentUserAsync(req);
+    let badRequest = null;
+
+    if (user !== null) {
+        const id = getSerialOrDefault(req.params.id, null);
+
+        try {
+            if (id === null)
+                badRequest = "El ID del evento no es válido.";
+
+            if (badRequest === null) {
+                const rowsAffected = await eventLocationService.deleteAsync(id, user.id);
+                if (rowsAffected !== 0) res.sendStatus(StatusCodes.OK);
+                else                    res.sendStatus(StatusCodes.NOT_FOUND);
+            } else {
+                res.sendStatus(StatusCodes.BAD_REQUEST);
+            }
+        } catch (internalError) {
+            console.error(internalError);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(internalError.message);
+        }
+    } else {
+        res.sendStatus(StatusCodes.UNAUTHORIZED);
+    }
+});
 
 export default router;

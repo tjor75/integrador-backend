@@ -51,9 +51,9 @@ export const updateAsync = async (id, creatorUserId, eventLocationUpdate) => {
     return resultPg.rowCount;
 };
 
-export const deleteAsync = async (id) => {
-    const sql = `DELETE FROM event_locations WHERE id = $1;`;
-    const values = [id];
+export const deleteAsync = async (id, creatorUserId) => {
+    const sql = `DELETE FROM event_locations WHERE id = $1 AND id_creator_user = $2;`;
+    const values = [id, creatorUserId];
     const resultPg = await pool.query(sql, values);
     return resultPg.rowCount > 0;
 };

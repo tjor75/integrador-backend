@@ -25,8 +25,8 @@ export const updateAsync = async (id, creatorUserId, eventLocationUpdate) => {
     return result;
 };
     
-export const deleteAsync = async (id) => {
-    const result = await eventLocationRepository.deleteAsync(id);
+export const deleteAsync = async (id, creatorUserId) => {
+    const result = await eventLocationRepository.deleteAsync(id, creatorUserId);
     return result;
 };
 
