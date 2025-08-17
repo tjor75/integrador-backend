@@ -94,7 +94,7 @@ export const getByIdAsync = async (id) => {
                     'last_name',    users.last_name,
                     'username',     users.username
                  ) AS creator_user,
-                 events.max_assistance,
+                 events.max_assistance
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
                  LEFT JOIN event_categories ON events.id_event_category = event_categories.id
