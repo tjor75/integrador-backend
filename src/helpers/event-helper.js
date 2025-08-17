@@ -1,4 +1,5 @@
 import * as eventLocationService from "../services/event-location-service.js";
+import { getDateOrDefault } from "./validator-helper.js";
 
 export const formatEventUpdate = async (body, eventUpdate) => {
     let error = null;

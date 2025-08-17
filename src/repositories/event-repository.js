@@ -26,7 +26,7 @@ export const getAllAsync = async (pageNumber=1, limit, filters) => {
                  ) AS location
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
-                 INNER JOIN event_categories ON events.id_event_category = event_categories.id
+                 LEFT JOIN event_categories ON events.id_event_category = event_categories.id
                  INNER JOIN event_locations ON events.id_event_location = event_locations.id
                  INNER JOIN locations ON event_locations.id_location = locations.id
                  INNER JOIN provinces ON locations.id_province = provinces.id
@@ -96,7 +96,7 @@ export const getByIdAsync = async (id) => {
                  ) AS creator_user
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
-                 INNER JOIN event_categories ON events.id_event_category = event_categories.id
+                 LEFT JOIN event_categories ON events.id_event_category = event_categories.id
                  INNER JOIN event_locations ON events.id_event_location = event_locations.id
                  INNER JOIN locations ON event_locations.id_location = locations.id
                  INNER JOIN provinces ON locations.id_province = provinces.id
