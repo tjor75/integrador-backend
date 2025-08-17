@@ -23,7 +23,7 @@ export const getAllAsync = async (pageNumber=1, limit, filters) => {
                     'name',         locations.name,
                     'longitude',    CAST(locations.longitude AS VARCHAR),
                     'latitude',     CAST(locations.latitude AS VARCHAR)
-                 ) AS location,
+                 ) AS location
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
                  LEFT JOIN event_categories ON events.id_event_category = event_categories.id
