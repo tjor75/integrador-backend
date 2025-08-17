@@ -24,7 +24,6 @@ export const getAllAsync = async (pageNumber=1, limit, filters) => {
                     'longitude',    CAST(locations.longitude AS VARCHAR),
                     'latitude',     CAST(locations.latitude AS VARCHAR)
                  ) AS location,
-                 max_assistance,
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
                  LEFT JOIN event_categories ON events.id_event_category = event_categories.id
@@ -94,7 +93,8 @@ export const getByIdAsync = async (id) => {
                     'first_name',   users.first_name,
                     'last_name',    users.last_name,
                     'username',     users.username
-                 ) AS creator_user
+                 ) AS creator_user,
+                 events.max_assistance,
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
                  LEFT JOIN event_categories ON events.id_event_category = event_categories.id
@@ -107,6 +107,7 @@ export const getByIdAsync = async (id) => {
                  GROUP BY
                     events.id, events.name, events.description, events.start_date,
                     events.duration_in_minutes, events.price, events.enabled_for_enrollment,
+                    events.max_assistance,
                     event_locations.id, event_locations.name, event_locations.full_address,
                     event_locations.max_capacity, event_locations.longitude,
                     event_locations.latitude, locations.id, locations.name,
