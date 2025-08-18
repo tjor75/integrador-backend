@@ -94,7 +94,7 @@ export const getByIdAsync = async (id) => {
                     'last_name',    users.last_name,
                     'username',     users.username
                  ) AS creator_user,
-                 events.max_assistance
+                 CAST(events.max_assistance AS VARCHAR) AS max_assistance
                  FROM events
                  INNER JOIN users ON events.id_creator_user = users.id
                  LEFT JOIN event_categories ON events.id_event_category = event_categories.id
@@ -218,6 +218,7 @@ export const doEnrollmentCheckAsync = async (id, userId) => {
     const sql = `SELECT
                  e.id AS event_id,
                  e.max_assistance,
+                 el.max_capacity,
                  e.start_date,
                  e.enabled_for_enrollment,
                  (
@@ -227,6 +228,7 @@ export const doEnrollmentCheckAsync = async (id, userId) => {
                     SELECT id FROM event_enrollments ee2 WHERE ee2.id_event = e.id AND ee2.id_user = $2
                  ) AS user_already_enrolled
                  FROM events e
+                 INNER JOIN event_locations el ON e.id_event_location = el.id
                  WHERE e.id = $1
                  LIMIT 1;`;
     const values = [id, userId];
