@@ -1,0 +1,900 @@
+{
+  "info": {
+    "_postman_id": "5e0d9d3e-0a44-4f58-8043-82243a118c63",
+    "name": "Integrador",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "users - logIn",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"nicole@gmail.com\",\r\n    \"password\": \"nicbru119\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/user/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "users - login - Correct",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"nicole@gmail.com\",\r\n    \"password\": \"nicbru119\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "219"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"db-YPQ4B/tjHFJtuMdBPzc3ocdIhAY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 13 Jul 2025 21:19:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTksInVzZXJuYW1lIjoibmljb2xlQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Ik5pY29sZSIsImxhc3ROYW1lIjoiQnJ1bnN0ZWluIiwiaWF0IjoxNzUyNTAzODU4LCJleHAiOjE3NTI1MDc0NTh9.iXI4K4zsiM2G3PzgV1brGwdlKXhr0Qas3lj5iurGKoA\"\n}"
+            },
+            {
+              "name": "users - login - Usuario y contraseña requeridos",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"nicole@gmail.com\",\r\n    \"password\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "219"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"db-YPQ4B/tjHFJtuMdBPzc3ocdIhAY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 13 Jul 2025 21:19:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"El usuario y la contraseña son requeridos.\",\n    \"token\": \"\"\n}"
+            },
+            {
+              "name": "users - login - Credenciales invalidas",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"username\": \"nicole@gmail.com\",\r\n    \"password\": \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/login",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "219"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"db-YPQ4B/tjHFJtuMdBPzc3ocdIhAY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 13 Jul 2025 21:19:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"Credenciales invalidas.\",\n    \"token\": \"\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "users - register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"first_name\"    : \"John\",\r\n    \"last_name\"     : \"Doe\",\r\n    \"username\"      : \"john.doe@example.com\",\r\n    \"password\"      : \"password123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/user/register",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "users - register - Correct",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"first_name\"    : \"John\",\r\n    \"last_name\"     : \"Doe\",\r\n    \"username\"      : \"john.doe@example.com\",\r\n    \"password\"      : \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "Created"
+            },
+            {
+              "name": "users - register - Empty",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"first_name\"    : \"\",\r\n    \"last_name\"     : \"\",\r\n    \"username\"      : \"\",\r\n    \"password\"      : \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "Bad Request"
+            },
+            {
+              "name": "users - register - Wrong email",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"first_name\"    : \"John\",\r\n    \"last_name\"     : \"Doe\",\r\n    \"username\"      : \"a@a.a\",\r\n    \"password\"      : \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "Bad Request"
+            },
+            {
+              "name": "users - register - \u003C3 chars",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"first_name\"    : \"John\",\r\n    \"last_name\"     : \"D\",\r\n    \"username\"      : \"john.doe@example.com\",\r\n    \"password\"      : \"password123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/user/register",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "user",
+                    "register"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": null,
+              "header": null,
+              "cookie": [],
+              "body": "Bad Request"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "events - getAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event/?page_number=1&startdate=2023-11-09&tag=Rock",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "page_number",
+                  "value": "1",
+                  "description": "El número de página es 1 por default"
+                },
+                {
+                  "key": "startdate",
+                  "value": "2023-11-09",
+                  "description": "Opcional"
+                },
+                {
+                  "key": "tag",
+                  "value": "Rock",
+                  "description": "Opcional"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events - getById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/event/{{id}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "event",
+                "{{id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events - create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\"                  : \"Nerdearla\",\r\n    \"description\"           : \"Mejor evento nerd de la historia\",\r\n    \"id_event_location\"     : 2,\r\n    \"max_assistance\"        : 1,\r\n    \"duration_in_minutes\"   : 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/event/",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                ""
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "events - create - Sin token",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/event/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "3000",
+                  "path": [
+                    "api",
+                    "event",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "plain",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2-nOO9QiTIwXgNtWtBJezz8kv3SLc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 14 Jul 2025 14:41:36 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "OK"
+            },
+            {
+              "name": "events - create - Sin nada",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\"                  : \"\",\r\n    \"description\"           : \"\",\r\n    \"max_assistance\"        : 44,\r\n    \"price\"                 : \"\",\r\n    \"duration_in_minutes\"   : 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/api/event/",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "api",
+                    "event",
+                    ""
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "html",
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/html; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "61"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"3d-pFHHk46nUDVMkwlX5vM63F9GhO8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 04 Aug 2025 18:25:51 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "El nombre y descripción debe tener al menos tres (3) letras."
+            }
+          ]
+        },
+        {
+          "name": "events - updateById",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 65,\r\n    \"description\": \"Segundo mejor evento de la historia\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/event/",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events - delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event/{{id}}",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                "{{id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events - checkEnrollment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event/{{id}}/enrollment/",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                "{{id}}",
+                "enrollment",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events - enroll",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event/{{id}}/enrollment/",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                "{{id}}",
+                "enrollment",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events - deEnroll",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event/{{id}}/enrollment/",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event",
+                "{{id}}",
+                "enrollment",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Event locations",
+      "item": [
+        {
+          "name": "event-locations - getAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event-location",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event-location"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "event-locations - create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Best City\",\r\n    \"id_location\": 1,\r\n    \"max_capacity\": 500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/event-location",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event-location"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "event-locations - delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event-location/{{id}}",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event-location",
+                "{{id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "event-locations - getById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/event-location/{{id}}",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event-location",
+                "{{id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "event-locations - getLocations",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"nicole@gmail.com\",\r\n    \"password\": \"nicbru119\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/event-location/locations",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "event-location",
+                "locations"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzU1MzIxOTM2LCJleHAiOjE3NTUzMjU1MzZ9.xrmjSW7lsCEPLeIdKfHXb1T3CG0tOqu2eW3-yzgGNIA",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "http://localhost:3000",
+      "type": "default"
+    },
+    {
+      "key": "id",
+      "value": "6"
+    }
+  ]
+}
