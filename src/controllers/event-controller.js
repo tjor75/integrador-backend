@@ -61,6 +61,7 @@ router.post("/", async (req, res) => {
             price                   : null,
             enabled_for_enrollment  : null,
             max_assistance          : null,
+            tags                    : null,
             id_creator_user         : user.id
         };
 

@@ -124,6 +124,36 @@ export const getByIdAsync = async (id) => {
     return entity;
 };
 
+export const getTagIdsByNamesAsync = async (tagNames) => {
+    if (!Array.isArray(tagNames) || tagNames.length === 0) return [];
+    const placeholders = tagNames.map((_, i) => `$${i + 1}`).join(", ");
+    const selectSql = `SELECT id, name FROM tags WHERE LOWER(name) IN (${placeholders})`;
+    const selectResult = await pool.query(selectSql, tagNames.map(n => n.toLowerCase()));
+    return selectResult.rows;
+};
+
+export const createTagsAsync = async (tagNames) => {
+    if (!Array.isArray(tagNames) || tagNames.length === 0) return [];
+    const insertPlaceholders = tagNames.map((_, i) => `($${i + 1})`).join(", ");
+    const insertSql = `INSERT INTO tags (name) VALUES ${insertPlaceholders} RETURNING id, name`;
+    const insertResult = await pool.query(insertSql, tagNames);
+    return insertResult.rows;
+};
+
+export const addTagsByIdsAsync = async (eventId, tagIds) => {
+    if (!Array.isArray(tagIds) || tagIds.length === 0) return;
+    const placeholders = tagIds.map((_, i) => `($1, $${i + 2})`).join(", ");
+    const sql = `INSERT INTO event_tags (id_event, id_tag) VALUES ${placeholders}`;
+    const values = [eventId, ...tagIds];
+    await pool.query(sql, values);
+};
+
+export const deleteEventTagsAsync = async (eventId) => {
+    const sql = `DELETE FROM event_tags WHERE id_event = $1`;
+    const values = [eventId];
+    await pool.query(sql, values);
+};
+
 export const createAsync = async (entity) => {
     const sql = `INSERT INTO events (
                     name,
@@ -160,8 +190,8 @@ export const createAsync = async (entity) => {
 
 export const updateAsync = async (id, creatorUserId, eventUpdate) => {
     const columns = Object.keys(eventUpdate);
+    if (columns.length === 0) return 0; // nothing to update
     const row = Object.values(eventUpdate);
-
     const sql = createUpdateSql("events", columns, ["id", "id_creator_user"]);
     const values = [...row, id, creatorUserId];
     const resultPg = await pool.query(sql, values);

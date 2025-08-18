@@ -40,8 +40,8 @@ export const formatEventUpdate = async (body, eventUpdate) => {
 
     if (!error && typeof body?.duration_in_minutes === "number") {
         const durationInMinutes = parseInt(body?.duration_in_minutes, 10);
-        if (durationInMinutes > 0)  eventUpdate.duration_in_minutes = durationInMinutes;
-        else                        error = "La duración del evento debe ser un número mayor o igual a 0.";
+        if (durationInMinutes >= 0)  eventUpdate.duration_in_minutes = durationInMinutes;
+        else                         error = "La duración del evento debe ser un número mayor o igual a 0.";
     }
 
     if (!error) {
@@ -70,6 +70,16 @@ export const formatEventUpdate = async (body, eventUpdate) => {
                 eventUpdate.max_assistance = maxAssistance;
         } else if (body?.max_assistance === null) {
             eventUpdate.max_assistance = null;
+        }
+    }
+
+    if (!error) {
+        if (Array.isArray(body?.tags)) {
+            const tags = [...new Set(body.tags.map(tag => String(tag).trim()).filter(tag => tag.length > 0))];
+            // Permitir array vacío -> limpia tags
+            eventUpdate.tags = tags; // puede ser []
+        } else if (body?.tags === null) {
+            eventUpdate.tags = null; // limpiar
         }
     }
 

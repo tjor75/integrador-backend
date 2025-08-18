@@ -13,11 +13,49 @@ export const getByIdAsync = async (id) => {
 
 export const createAsync = async (event) => {
     const id = await eventRepository.createAsync(event);
+
+    if (id && Array.isArray(event.tags) && event.tags.length) {
+        const existingTags = await eventRepository.getTagIdsByNamesAsync(event.tags);
+        const existingMap = new Map(existingTags.map(r => [r.name.toLowerCase(), r.id]));
+        const missing = event.tags.filter(t => !existingMap.has(t.toLowerCase()));
+        let newRows = [];
+        if (missing.length) newRows = await eventRepository.createTagsAsync(missing);
+        const allTagIds = [
+            ...existingTags.map(r => r.id),
+            ...newRows.map(r => r.id)
+        ];
+        if (allTagIds.length) await eventRepository.addTagsByIdsAsync(id, allTagIds);
+    }
+
     return id;
 };
 
-export const updateAsync = async (id, creatorUserId, eventUpdate) => { 
+export const updateAsync = async (id, creatorUserId, eventUpdate) => {
+    const tagsIncluded = Object.prototype.hasOwnProperty.call(eventUpdate, "tags");
+    const tagsValue = tagsIncluded ? eventUpdate.tags : undefined;
+    if (tagsIncluded) delete eventUpdate.tags; // avoid dynamic column update attempt
+
     const result = await eventRepository.updateAsync(id, creatorUserId, eventUpdate);
+
+    if (result && tagsIncluded) {
+        await eventRepository.deleteEventTagsAsync(id);
+        if (tagsValue === null) {
+            // explicit clear
+        } else if (Array.isArray(tagsValue) && tagsValue.length) {
+            const existing = await eventRepository.getTagIdsByNamesAsync(tagsValue);
+            const existingMap = new Map(existing.map(r => [r.name.toLowerCase(), r.id]));
+            const missing = tagsValue.filter(t => !existingMap.has(t.toLowerCase()));
+            let newRows = [];
+            if (missing.length) newRows = await eventRepository.createTagsAsync(missing);
+            const allTagIds = [
+                ...existing.map(r => r.id),
+                ...newRows.map(r => r.id)
+            ];
+            if (allTagIds.length) await eventRepository.addTagsByIdsAsync(id, allTagIds);
+        }
+        // empty array => leave without tags
+    }
+
     return result;
 };
 
@@ -72,4 +110,4 @@ export const unenrollAsync = async (eventId, userId) => {
         await eventRepository.unenrollAsync(eventId, userId);
 
     return badRequest;
-}
+};
