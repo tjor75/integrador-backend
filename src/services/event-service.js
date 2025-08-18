@@ -80,7 +80,7 @@ export const enrollAsync = async (eventId, userId) => {
 
     if (check === null)
         badRequest = "El evento no existe.";
-    else if (check.max_assistance !== null && check.current_enrollments >= check.max_assistance || check.current_enrollments >= check.max_capacity)
+    else if (check.current_enrollments >= check.max_assistance)
         badRequest = "El evento ha alcanzado su capacidad máxima de inscripciones.";
     else if (check.start_date <= new Date())
         badRequest = "No se puede inscribir a un evento que ya ha comenzado o que es hoy.";
